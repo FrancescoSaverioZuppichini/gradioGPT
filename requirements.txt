@@ -1,0 +1,6 @@
+openai
+gradio
+langchain
+python-dotenv
+black
+isort
