@@ -12,6 +12,8 @@ pinned: false
 # GradioGPT
 A perfect get started template for your amazing new shiny GPT application that comes with a gradio demo
 
+![alt](docs/images/app.jpg)
+
 **Features**
 
 - [LangChain `ChatOpenAI`](https://python.langchain.com/en/latest/modules/models/chat/integrations/openai.html)

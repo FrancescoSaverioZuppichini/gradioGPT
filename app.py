@@ -115,8 +115,8 @@ with gr.Blocks(
     chat = gr.State(None)
 
     with gr.Column(elem_id="col_container"):
-        gr.Markdown("# Welcome to my Amazing App! 🌟🚀")
-        gr.Markdown("It comes with state and settings managment")
+        gr.Markdown("# Welcome to GradioGPT! 🌟🚀")
+        gr.Markdown("An easy to use template. It comes with state and settings managment")
 
         chatbot = gr.Chatbot()
         with gr.Column():
