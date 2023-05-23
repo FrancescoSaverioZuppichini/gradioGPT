@@ -12,9 +12,7 @@ pinned: false
 # GradioGPT
 A perfect starting template for your amazing new shiny GPT application that comes with a gradio demo
 
-![alt](docs/videos/gradioGPT.mp4)
-
-![alt](docs/images/app.jpg)
+![alt](docs/videos/gradioGPT.webm)
 
 **Features**
 
