@@ -12,7 +12,8 @@ pinned: false
 # GradioGPT
 A perfect starting template for your amazing new shiny GPT application that comes with a gradio demo
 
-![alt](docs/videos/gradioGPT.webm)
+[gradioGPT.webm](https://github.com/FrancescoSaverioZuppichini/gradioGPT/assets/15908060/021ff848-fc91-4486-8e39-2d09d725cc78)
+
 
 **Features**
 
