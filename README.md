@@ -15,7 +15,7 @@ A perfect starting template for your amazing new shiny GPT application that come
 [gradioGPT.webm](https://github.com/FrancescoSaverioZuppichini/gradioGPT/assets/15908060/f5a23581-88bf-4129-9d28-a47beeae1bdf)
 
 
-## Features 🔥
+## 🔥 Features
 
 - [LangChain `ChatOpenAI`](https://python.langchain.com/en/latest/modules/models/chat/integrations/openai.html)
 - Streaming
