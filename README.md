@@ -19,7 +19,7 @@ A perfect starting template for your amazing new shiny GPT application that come
 
 - [LangChain `ChatOpenAI`](https://python.langchain.com/en/latest/modules/models/chat/integrations/openai.html)
 - Streaming
-- [State managment](https://gradio.app/state-in-blocks/) so multiple user can use it
+- [State management](https://gradio.app/state-in-blocks/) so multiple users can use it
 - UI with [Gradio](https://gradio.app/)
 - types and comments
 
