@@ -162,3 +162,4 @@ with gr.Blocks(
                 )
 
 demo.queue()
+demo.launch()

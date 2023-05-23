@@ -10,7 +10,9 @@ pinned: false
 ---
 
 # GradioGPT
-A perfect get started template for your amazing new shiny GPT application that comes with a gradio demo
+A perfect starting template for your amazing new shiny GPT application that comes with a gradio demo
+
+![alt](docs/videos/gradioGPT.mp4)
 
 ![alt](docs/images/app.jpg)
 
@@ -22,9 +24,23 @@ A perfect get started template for your amazing new shiny GPT application that c
 - UI with [Gradio](https://gradio.app/)
 - types and comments
 
-## Installation
+## 💻 Installation
+
+Create a `.env` file with your OpenAI API Key
+
+```bash
+echo "OPENAI_API_KEY=<YOUR_API_KEY>" > .env
+```
+
+You `.env` should look like
+
+```
+OPENAI_API_KEY=<YOUR_KEY>
+```
 
 ### Virtual Enviroment
+
+You can use python virtual env
 
 ```bash
 python -m venv .venv
@@ -35,13 +51,32 @@ pip install -r requirements.txt
 Then
 
 ```bash
+cd src
 gradio app.py
 ```
 
-### OpenAI key
+Using `gradio` is great because it gives you hot reloading
 
-Place your OpenAI key into `.env`
+### Docker 
 
+Easy peasy
+
+```bash
+docker build -t gradio-app .
+docker run --rm -it -p 7860:7860 \
+    -e GRADIO_SERVER_NAME=0.0.0.0 \
+    -v $(pwd)/.env:/app/.env \
+    gradio-app
 ```
-OPENAI_API_KEY=<YOUR_KEY>
+
+Then, navigate to `http://0.0.0.0:7860/`
+
+You can also change the python version used (defaults to `3.11`) by
+
+```bash
+docker build --build-arg PYTHON_VERSION=3.9 -t gradio-app .
 ```
+
+## 🏆 contribution
+
+Want to contribute? Thanks a lot! Please Fork it and PR it 🙏
