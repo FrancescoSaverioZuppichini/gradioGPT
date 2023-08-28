@@ -26,12 +26,12 @@ logging.basicConfig(
     format="[%(asctime)s %(levelname)s]: %(message)s", level=logging.INFO
 )
 # load up our system prompt
-system_message = SystemMessage(content=Path("prompts/system.prompt").read_text())
+default_system_prompt = Path("prompts/system.prompt").read_text()
 # for the human, we will just inject the text
 human_message_prompt_template = HumanMessagePromptTemplate.from_template("{text}")
 
 
-def message_handler(
+def on_message_button_click(
     chat: Optional[ChatOpenAI],
     message: str,
     chatbot_messages: ChatHistory,
@@ -53,7 +53,7 @@ def message_handler(
 
     job_done = object()
 
-    logging.info("asking question to GPT")
+    logging.info(f"Asking question to GPT, messages={messages}")
     # let's add the messages to our stuff
     messages.append(HumanMessage(content=message))
     chatbot_messages.append((message, ""))
@@ -85,11 +85,17 @@ def message_handler(
     return chat, "", chatbot_messages, messages
 
 
-def on_clear_click() -> Tuple[str, List, List]:
-    return "", [], []
+def system_prompt_handler(value: str) -> str:
+    return value
 
 
-def on_apply_settings_click(model_name: str, temperature: float):
+def on_clear_button_click(system_prompt: str) -> Tuple[str, List, List]:
+    return "", [], [SystemMessage(content=system_prompt)]
+
+
+def on_apply_settings_button_click(
+    system_prompt: str, model_name: str, temperature: float
+):
     logging.info(
         f"Applying settings: model_name={model_name}, temperature={temperature}"
     )
@@ -101,7 +107,7 @@ def on_apply_settings_click(model_name: str, temperature: float):
     )
     # don't forget to nuke our queue
     chat.callbacks[0].queue.empty()
-    return chat, *on_clear_click()
+    return chat, *on_clear_button_click(system_prompt)
 
 
 # some css why not, "borrowed" from https://huggingface.co/spaces/ysharma/Gradio-demo-streaming/blob/main/app.py
@@ -109,36 +115,50 @@ with gr.Blocks(
     css="""#col_container {width: 700px; margin-left: auto; margin-right: auto;}
                 #chatbot {height: 400px; overflow: auto;}"""
 ) as demo:
+    system_prompt = gr.State(default_system_prompt)
     # here we keep our state so multiple user can use the app at the same time!
-    messages = gr.State([system_message])
+    messages = gr.State([SystemMessage(content=default_system_prompt)])
     # same thing for the chat, we want one chat per use so callbacks are unique I guess
     chat = gr.State(None)
 
     with gr.Column(elem_id="col_container"):
         gr.Markdown("# Welcome to GradioGPT! 🌟🚀")
-        gr.Markdown("An easy to use template. It comes with state and settings managment")
+        gr.Markdown(
+            "An easy to use template. It comes with state and settings managment"
+        )
+        with gr.Column():
+            system_prompt_area = gr.TextArea(
+                default_system_prompt, lines=4, label="system prompt", interactive=True
+            )
+            # we store the value into the state to avoid re rendering of the area
+            system_prompt_area.input(
+                system_prompt_handler,
+                inputs=[system_prompt_area],
+                outputs=[system_prompt],
+            )
+            system_prompt_button = gr.Button("Set")
 
         chatbot = gr.Chatbot()
         with gr.Column():
             message = gr.Textbox(label="chat input")
             message.submit(
-                message_handler,
+                on_message_button_click,
                 [chat, message, chatbot, messages],
                 [chat, message, chatbot, messages],
                 queue=True,
             )
-            submit = gr.Button("Submit", variant="primary")
-            submit.click(
-                message_handler,
+            message_button = gr.Button("Submit", variant="primary")
+            message_button.click(
+                on_message_button_click,
                 [chat, message, chatbot, messages],
                 [chat, message, chatbot, messages],
             )
         with gr.Row():
             with gr.Column():
-                clear = gr.Button("Clear")
-                clear.click(
-                    on_clear_click,
-                    [],
+                clear_button = gr.Button("Clear")
+                clear_button.click(
+                    on_clear_button_click,
+                    [system_prompt],
                     [message, chatbot, messages],
                     queue=False,
                 )
@@ -154,12 +174,18 @@ with gr.Blocks(
                     label="temperature",
                     interactive=True,
                 )
-                apply_settings = gr.Button("Apply")
-                apply_settings.click(
-                    on_apply_settings_click,
-                    [model_name, temperature],
+                apply_settings_button = gr.Button("Apply")
+                apply_settings_button.click(
+                    on_apply_settings_button_click,
+                    [system_prompt, model_name, temperature],
                     [chat, message, chatbot, messages],
                 )
+
+        system_prompt_button.click(
+            on_apply_settings_button_click,
+            [system_prompt, model_name, temperature],
+            [chat, message, chatbot, messages],
+        )
 
 demo.queue()
 demo.launch()
